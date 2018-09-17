@@ -23,7 +23,7 @@
         NSLog(@"");
     }];
     //注意：如需测试请把注释代码放出即可
-    //[self startTest];
+    [self startTest];
 }
 
 - (void)startTest {
