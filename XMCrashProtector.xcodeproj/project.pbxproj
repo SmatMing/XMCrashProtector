@@ -75,7 +75,6 @@
 		044AD1A5214F739D00C776CA /* XMProtectorCrashLog.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = XMProtectorCrashLog.m; sourceTree = "<group>"; };
 		044AD1A7214F739D00C776CA /* NSObject+SelectorSafeguard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SelectorSafeguard.h"; sourceTree = "<group>"; };
 		044AD1A8214F739D00C776CA /* NSObject+SelectorSafeguard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SelectorSafeguard.m"; sourceTree = "<group>"; };
-		044AD1A9214F739D00C776CA /* NSObject+Safeguard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+Safeguard.h"; sourceTree = "<group>"; };
 		044AD1AB214F739D00C776CA /* NSObject+KVOSafeguard.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+KVOSafeguard.m"; sourceTree = "<group>"; };
 		044AD1AC214F739D00C776CA /* NSObject+KVOSafeguard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+KVOSafeguard.h"; sourceTree = "<group>"; };
 		044AD1AD214F739D00C776CA /* XMProtectorManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XMProtectorManager.h; sourceTree = "<group>"; };
@@ -197,7 +196,6 @@
 		044AD1A3214F739D00C776CA /* XMCrashProtector */ = {
 			isa = PBXGroup;
 			children = (
-				044AD1A9214F739D00C776CA /* NSObject+Safeguard.h */,
 				044AD1B0214F739D00C776CA /* NSObject+XMExchange.h */,
 				044AD1A4214F739D00C776CA /* NSObject+XMExchange.m */,
 				044AD1AE214F739D00C776CA /* XMProtectorCrash.h */,
@@ -227,8 +225,8 @@
 		044AD1AA214F739D00C776CA /* Safe+KVO */ = {
 			isa = PBXGroup;
 			children = (
-				044AD1AB214F739D00C776CA /* NSObject+KVOSafeguard.m */,
 				044AD1AC214F739D00C776CA /* NSObject+KVOSafeguard.h */,
+				044AD1AB214F739D00C776CA /* NSObject+KVOSafeguard.m */,
 			);
 			path = "Safe+KVO";
 			sourceTree = "<group>";
@@ -254,22 +252,22 @@
 		044AD1B7214F739D00C776CA /* Safe+Container */ = {
 			isa = PBXGroup;
 			children = (
+				044AD1C2214F739D00C776CA /* NSArray+Safeguard.h */,
 				044AD1B8214F739D00C776CA /* NSArray+Safeguard.m */,
-				044AD1B9214F739D00C776CA /* NSString+Safeguard.h */,
-				044AD1BA214F739D00C776CA /* NSMutableArray+Safeguard.h */,
+				044AD1C5214F739D00C776CA /* NSAttributedString+Safeguard.h */,
 				044AD1BB214F739D00C776CA /* NSAttributedString+Safeguard.m */,
 				044AD1BC214F739D00C776CA /* NSDictionary+Safeguard.h */,
+				044AD1C4214F739D00C776CA /* NSDictionary+Safeguard.m */,
+				044AD1BA214F739D00C776CA /* NSMutableArray+Safeguard.h */,
+				044AD1C0214F739D00C776CA /* NSMutableArray+Safeguard.m */,
+				044AD1C3214F739D00C776CA /* NSMutableAttributedString+Safeguard.h */,
 				044AD1BD214F739D00C776CA /* NSMutableAttributedString+Safeguard.m */,
+				044AD1C6214F739D00C776CA /* NSMutableDictionary+Safeguard.h */,
 				044AD1BE214F739D00C776CA /* NSMutableDictionary+Safeguard.m */,
 				044AD1BF214F739D00C776CA /* NSMutableString+Safeguard.h */,
-				044AD1C0214F739D00C776CA /* NSMutableArray+Safeguard.m */,
-				044AD1C1214F739D00C776CA /* NSString+Safeguard.m */,
-				044AD1C2214F739D00C776CA /* NSArray+Safeguard.h */,
-				044AD1C3214F739D00C776CA /* NSMutableAttributedString+Safeguard.h */,
-				044AD1C4214F739D00C776CA /* NSDictionary+Safeguard.m */,
-				044AD1C5214F739D00C776CA /* NSAttributedString+Safeguard.h */,
-				044AD1C6214F739D00C776CA /* NSMutableDictionary+Safeguard.h */,
 				044AD1C7214F739D00C776CA /* NSMutableString+Safeguard.m */,
+				044AD1B9214F739D00C776CA /* NSString+Safeguard.h */,
+				044AD1C1214F739D00C776CA /* NSString+Safeguard.m */,
 			);
 			path = "Safe+Container";
 			sourceTree = "<group>";

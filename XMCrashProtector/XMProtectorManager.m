@@ -4,18 +4,18 @@
 //
 
 #import "XMProtectorManager.h"
-#import "XMProtectorCrash.h"
 
 static XMCrashProtectorBlock _crashProtector;
 
 @implementation XMProtectorManager
 
 //打开目前所支持的所有crash保护 回调block
-+ (void)openAllCrashProtectorWithBlock:(XMCrashProtectorBlock)block {
++ (void)openCrashProtectorType:(XMCrashProtectorType)crashType
+                     withBlock:(XMCrashProtectorBlock)block {
     if (block) {
         _crashProtector = block;
     }
-    [XMProtectorCrash openAllCrashProtector];    
+    [[XMProtectorCrash shareProtecotor] openCrashProtector:crashType];
 }
 
 //crash 日志

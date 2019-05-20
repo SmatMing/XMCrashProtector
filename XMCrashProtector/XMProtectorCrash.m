@@ -7,79 +7,90 @@
 //
 
 #import "XMProtectorCrash.h"
-#import "NSObject+Safeguard.h"
-//container
-#import "NSString+Safeguard.h"
-#import "NSMutableString+Safeguard.h"
-#import "NSAttributedString+Safeguard.h"
-#import "NSMutableAttributedString+Safeguard.h"
-#import "NSArray+Safeguard.h"
-#import "NSMutableArray+Safeguard.h"
-#import "NSDictionary+Safeguard.h"
-#import "NSMutableDictionary+Safeguard.h"
-//NSTimer
-#import "NSTimer+Safeguard.h"
-//KVO
-#import "NSObject+KVOSafeguard.h"
-//UnRecognitionSelector
-#import "NSObject+SelectorSafeguard.h"
-//Notification
-#import "NSNotificationCenter+Safeguard.h"
 
+@interface XMProtectorCrash ()
+{
+    NSMutableSet* _currentClassesSet;
+    NSMutableSet* _blackClassesSet;
+    NSInteger _currentClassSize;
+    dispatch_semaphore_t _classArrayLock;
+    dispatch_semaphore_t _prtectorLock;
+}
 
+@end
 
 @implementation XMProtectorCrash
 
-+ (void)openAllCrashProtector {
-    //容器类保护
-    [self openContainerCrashProtector];
++ (instancetype)shareProtecotor {
+    static dispatch_once_t onceToken;
+    static id crashProtector;
+    dispatch_once(&onceToken, ^{
+        crashProtector = [[self alloc] init];
+    });
+    return crashProtector;
+}
+
+- (instancetype)init{
+    self = [super init];
+    if (self) {
+        _blackClassesSet = [NSMutableSet new];
+        _currentClassesSet = [NSMutableSet new];
+        _currentClassSize = 0;
+        _classArrayLock = dispatch_semaphore_create(1);
+        _prtectorLock = dispatch_semaphore_create(1);
+    }
+    return self;
+}
+
+- (void)openCrashProtector:(XMCrashProtectorType)crashType {
     
-    //定时器保护
-    [self openTimerCrashProtector];
-    
-    //KVO
-    [self openKOVCrashProtector];
-    
-    //Selecter
-    [self openUnrecognizedSelectorCrashProtector];
-    
-    //NotificationCenter,可能会有性能问题，dealloc里面加了判断，
-    //系统的每个对象dealloc时都会调用
-    [self openNotificationCenterCrashProtector];
+     dispatch_semaphore_wait(_prtectorLock, DISPATCH_TIME_FOREVER);
+    if (crashType) {
+        #pragma clang diagnostic push
+        #pragma clang diagnostic ignored "-Wundeclared-selector"
+        
+         //容器类保护
+        if (XMCrashProtectorTypeContainer) {
+            //1.NSString
+            [NSString performSelector:@selector(openCrashProtector)];
+            [NSMutableString performSelector:@selector(openCrashProtector)];
+            
+            //2.NSAttributedString
+            [NSAttributedString performSelector:@selector(openCrashProtector)];
+            [NSMutableAttributedString performSelector:@selector(openCrashProtector)];
+            
+            //3.NSArray
+            [NSArray performSelector:@selector(openCrashProtector)];
+            [NSMutableArray performSelector:@selector(openCrashProtector)];
+            
+            //4.NSDictionary
+            [NSDictionary performSelector:@selector(openCrashProtector)];
+            [NSMutableDictionary performSelector:@selector(openCrashProtector)];
+        }
+        
+        //定时器保护
+        if (XMCrashProtectorCrashTimer) {
+            [NSTimer performSelector:@selector(openCrashProtector)];
+        }
+        
+        //KVO
+        if (XMCrashProtectorTypeKVO) {
+            [NSObject performSelector:@selector(openCrashProtectorKVO)];
+        }
+        
+        //Selecter
+        if (XMCrashProtectorTypeSelector) {
+           [NSObject performSelector:@selector(openCrashProtectorSelector)];
+        }
+        
+        //NotificationCenter
+        if (XMCrashProtectorCrashTypeNotification) {
+            [NSNotificationCenter performSelector:@selector(openCrashProtector)];
+        }
+        
+         #pragma clang diagnostic pop
+    }
+    dispatch_semaphore_signal(_prtectorLock);
 }
-
-
-+ (void)openContainerCrashProtector {
-    //1.NSString
-    [NSString openCrashProtector];
-    [NSMutableString openCrashProtector];
-    //2.NSAttributedString
-    [NSAttributedString openCrashProtector];
-    [NSMutableAttributedString openCrashProtector];
-    //3.NSArray
-    [NSArray openCrashProtector];
-    [NSMutableArray openCrashProtector];
-    //4.NSDictionary
-    [NSDictionary openCrashProtector];
-    [NSMutableDictionary openCrashProtector];
-}
-
-+ (void)openTimerCrashProtector {
-    [NSTimer openCrashProtector];
-}
-
-+ (void)openKOVCrashProtector {
-    [NSObject openCrashProtectorKVO];
-}
-
-+ (void)openUnrecognizedSelectorCrashProtector {
-    [NSObject openCrashProtectorSelector];
-}
-
-+ (void)openNotificationCenterCrashProtector {
-    [NSNotificationCenter openCrashProtector];
-}
-
-
 
 @end

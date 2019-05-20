@@ -47,7 +47,8 @@
         return ms;
     }
     else{
-        return [SafeProxy instanceMethodSignatureForSelector:@selector(safe_pretectAction)];
+        ms = [SafeProxy instanceMethodSignatureForSelector:@selector(safe_pretectAction)];
+        return ms;
     }
 }
 

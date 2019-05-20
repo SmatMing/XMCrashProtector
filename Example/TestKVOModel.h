@@ -13,4 +13,6 @@
 
 @property (nonatomic, strong) UIView *testView;
 
+- (void)startTest;
+
 @end

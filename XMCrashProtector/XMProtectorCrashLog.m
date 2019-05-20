@@ -7,6 +7,8 @@
 //
 
 #import "XMProtectorCrashLog.h"
+#import <mach-o/dyld.h>
+#import <objc/runtime.h>
 
 static const NSString *XMCrashSeparatorWithFlag = @"********* XMCrashProtector **********";
 
@@ -33,10 +35,18 @@ static const NSString *XMCrashSeparatorWithFlag = @"********* XMCrashProtector *
     if (mainCallStackSymbolMsg == nil) {
         mainCallStackSymbolMsg = @"Crash location failed, see the function call stack to troubleshoot the error.";
     }
-    NSString *crashName = [NSString stringWithFormat:@"********* [Crash Type]: %@",exception.name];
-    NSString *errorReason = [NSString stringWithFormat:@"********* [Crash Reason]: %@",exception.reason];;
-    NSString *errorPlace = [NSString stringWithFormat:@"********* [Error Place]: %@",mainCallStackSymbolMsg];
-    NSString *logErrorMessage = [NSString stringWithFormat:@"\n\n%@\n\n%@\n%@\n%@\n%@\n",XMCrashSeparatorWithFlag, crashName, errorReason, errorPlace, exception.callStackSymbols];
+    
+    //崩溃地址
+    uintptr_t loadAddress =  get_load_address();
+    uintptr_t slideAddress =  get_slide_address();
+    
+     NSString *crashLoadAddress = [NSString stringWithFormat:@"【Load Address】: %@",[self toHex:loadAddress]];
+     NSString *crashSlideAddress = [NSString stringWithFormat:@"【slide Address】: %@",[self toHex:slideAddress]];
+    
+    NSString *crashName = [NSString stringWithFormat:@"【Crash Type】: %@",exception.name];
+    NSString *errorReason = [NSString stringWithFormat:@"【Crash Reason】: %@",exception.reason];;
+    NSString *errorPlace = [NSString stringWithFormat:@"【Error Place】: %@",mainCallStackSymbolMsg];
+    NSString *logErrorMessage = [NSString stringWithFormat:@"\n\n%@\n%@\n%@\n%@\n%@\n%@\n%@\n",XMCrashSeparatorWithFlag, crashLoadAddress, crashSlideAddress, crashName, errorReason, errorPlace, exception.callStackSymbols];
     if (block) {
         block(logErrorMessage);
     }
@@ -86,6 +96,80 @@ static const NSString *XMCrashSeparatorWithFlag = @"********* XMCrashProtector *
     
     return mainCallStackSymbolMsg;
 }
+
+/**
+ Get application base address,the application different base address after started
+ 
+ @return base address
+ */
+uintptr_t get_load_address(void) {
+    const struct mach_header *exe_header = NULL;
+    for (uint32_t i = 0; i < _dyld_image_count(); i++) {
+        const struct mach_header *header = _dyld_get_image_header(i);
+        if (header->filetype == MH_EXECUTE) {
+            exe_header = header;
+            break;
+        }
+    }
+    return (uintptr_t)exe_header;
+}
+
+/**
+ Address Offset
+ 
+ @return slide address
+ */
+uintptr_t get_slide_address(void) {
+    uintptr_t vmaddr_slide = 0;
+    for (uint32_t i = 0; i < _dyld_image_count(); i++) {
+        const struct mach_header *header = _dyld_get_image_header(i);
+        if (header->filetype == MH_EXECUTE) {
+            vmaddr_slide = _dyld_get_image_vmaddr_slide(i);
+            break;
+        }
+    }
+    
+    return (uintptr_t)vmaddr_slide;
+}
+
+//将十进制转化为十六进制
++ (NSString *)toHex:(long long int)tmpid {
+    if ([@(tmpid) isEqual:[NSNull null]]) {
+        return @"";
+    }
+    NSString *nLetterValue;
+    NSString *str = @"";
+    long long int ttmpig;
+    NSInteger count = [@(tmpid) stringValue].length;
+    for (int i = 0; i<count; i++) {
+        ttmpig=tmpid%16;
+        tmpid=tmpid/16;
+        switch (ttmpig)
+        {
+            case 10:
+                nLetterValue =@"a";break;
+            case 11:
+                nLetterValue =@"b";break;
+            case 12:
+                nLetterValue =@"c";break;
+            case 13:
+                nLetterValue =@"d";break;
+            case 14:
+                nLetterValue =@"e";break;
+            case 15:
+                nLetterValue =@"f";break;
+            default:nLetterValue=[[NSString alloc] initWithFormat:@"%lli",ttmpig];
+                
+        }
+        str = [nLetterValue stringByAppendingString:str];
+        if (tmpid == 0) {
+            break;
+        }
+        
+    }
+    return str;
+}
+
 
 
 @end

@@ -12,6 +12,7 @@
 
 @interface ViewController ()
 @property (nonatomic, strong) TestKVOModel *model;
+@property (nonatomic, strong) NSTimer *timer;
 
 @end
 
@@ -19,37 +20,38 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [XMProtectorManager openAllCrashProtectorWithBlock:^(NSException *exception, NSString *crashLog, XMCrashProtectorType crashType) {
-        NSLog(@"");
+    [XMProtectorManager openCrashProtectorType:XMCrashProtectorTypeAll withBlock:^(NSException *exception, NSString *crashLog, XMCrashProtectorType crashType) {
+         NSLog(@"");
     }];
     //注意：如需测试请把注释代码放出即可
     [self startTest];
 }
 
 - (void)startTest {
-    [self testArray];
-    [self testMutableArray];
-    
-    [self testDict];
-    [self testMutableDict];
-    
-    [self testString];
-    [self testMutableString];
-    
-    [self testAttributedString];
-    [self testMutableAttributedString];
-
-    [self testUnrecognizedSelector];
-    
-    [self testKVO];
-    
-    [self testNotifactionCenter];
+//    [self testArray];
+//    [self testMutableArray];
+//
+//    [self testDict];
+//    [self testMutableDict];
+//
+//    [self testString];
+//    [self testMutableString];
+//
+//    [self testAttributedString];
+//    [self testMutableAttributedString];
+//
+//    [self testUnrecognizedSelector];
+//
+//    [self testKVO];
+//
+//    [self testNotifactionCenter];
+    [self testTimer];
     
 }
 
 #pragma mark - -------------------------NSArray-------------------------
 - (void)testArray {
-    //1.
+   /* //1.
     NSString *nilStr = nil;
     NSArray *array1 = @[@"11111", nilStr, @"22222"];
     NSLog(@"%@",array1);
@@ -69,6 +71,10 @@
     NSRange range = NSMakeRange(0, 15);
     __unsafe_unretained id cArray[range.length];
     [array4 getObjects:cArray range:range];
+    
+    NSArray *array5 = [NSArray arrayWithObjects:@1,@2,@3,@4,@5, nil];
+    NSInteger i = [array5 objectAtIndex:9];
+    */
 }
 
 - (void)testMutableArray {
@@ -99,7 +105,7 @@
 #pragma mark - -------------------------NSDictionary-------------------------
 - (void)testDict {
     //1.
-    NSString *nilStr = nil;
+    NSString *nilStr = NULL;
     NSDictionary *dict = @{
                            @"name" : @"xm",
                            @"age" : nilStr
@@ -223,6 +229,7 @@
     //2.重复移除
     TestKVOModel *model2 = [[TestKVOModel alloc] init];
     self.model = model2;
+    [model2 startTest];
     [self addObserver:self.model forKeyPath:@"kvoRemove" options:(NSKeyValueObservingOptionNew) context:nil];
     [self removeObserver:self.model forKeyPath:@"kvoRemove"];
     [self removeObserver:self.model forKeyPath:@"kvoRemove" context:nil];
@@ -269,10 +276,15 @@
 #pragma mark - ---------------unrecognized selector sent to instance------------------
 - (void)testUnrecognizedSelector {
     
-    //    [self performSelector:@selector(actonstart1) withObject:nil];
+        [self performSelector:@selector(actonstart1) withObject:nil];
 }
 
 
+
+#pragma mark - ---------------Timer------------------
+- (void)testTimer {
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerAction:) userInfo:nil repeats:YES];
+}
 
 
 - (void)didReceiveMemoryWarning {
