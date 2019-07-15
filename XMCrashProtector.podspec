@@ -2,7 +2,7 @@ Pod::Spec.new do |s|
 
   s.name         = "XMCrashProtector"
   s.version      = "1.0.1"
-  s.summary      = "这是一个crash防护组件"
+  s.summary      = "This is a crash protection component"
 
   s.description  = <<-DESC
                     XMCrashProtector Handle the objective-c crash exception.

@@ -36,12 +36,18 @@ static const NSString *XMCrashSeparatorWithFlag = @"********* XMCrashProtector *
         mainCallStackSymbolMsg = @"Crash location failed, see the function call stack to troubleshoot the error.";
     }
     
-    //崩溃地址
-    uintptr_t loadAddress =  get_load_address();
-    uintptr_t slideAddress =  get_slide_address();
+    //崩溃地址:symbol address = stack address - slide;
+    /*
+     * symbol address = get_symbol_address();
+     * slide = get_slide();
+     * stack address 在崩溃日志的上查找
+     */
+    uintptr_t slide = get_slide();
+    uintptr_t symbolAddress =  get_symbol_address();
     
-     NSString *crashLoadAddress = [NSString stringWithFormat:@"【Load Address】: %@",[self toHex:loadAddress]];
-     NSString *crashSlideAddress = [NSString stringWithFormat:@"【slide Address】: %@",[self toHex:slideAddress]];
+      NSString *crashSlideAddress = [NSString stringWithFormat:@"【Slide 】: %@",[self toHex:slide]];
+     NSString *crashLoadAddress = [NSString stringWithFormat:@"【Symbol Address】: %@",[self toHex:symbolAddress]];
+   
     
     NSString *crashName = [NSString stringWithFormat:@"【Crash Type】: %@",exception.name];
     NSString *errorReason = [NSString stringWithFormat:@"【Crash Reason】: %@",exception.reason];;
@@ -102,7 +108,7 @@ static const NSString *XMCrashSeparatorWithFlag = @"********* XMCrashProtector *
  
  @return base address
  */
-uintptr_t get_load_address(void) {
+uintptr_t get_symbol_address(void) {
     const struct mach_header *exe_header = NULL;
     for (uint32_t i = 0; i < _dyld_image_count(); i++) {
         const struct mach_header *header = _dyld_get_image_header(i);
@@ -119,7 +125,7 @@ uintptr_t get_load_address(void) {
  
  @return slide address
  */
-uintptr_t get_slide_address(void) {
+uintptr_t get_slide(void) {
     uintptr_t vmaddr_slide = 0;
     for (uint32_t i = 0; i < _dyld_image_count(); i++) {
         const struct mach_header *header = _dyld_get_image_header(i);
