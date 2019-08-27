@@ -18,12 +18,16 @@ typedef NS_ENUM(NSInteger, XMCrashProtectorType) {
     XMCrashProtectorTypeAll = XMCrashProtectorTypeSelector | XMCrashProtectorTypeKVO | XMCrashProtectorTypeContainer | XMCrashProtectorCrashTypeNotification | XMCrashProtectorCrashTimer,         /*开启所有的保护*/
 };
 
-@interface XMProtectorCrash : NSObject
+typedef void(^XMCrashProtectorBlock)(NSException *exception,NSString *crashLog);
 
-@property (nonatomic, strong) NSException *exception;
+@interface XMProtectorCrash : NSObject
 
 + (instancetype)shareProtecotor;
 
-- (void)openCrashProtector:(XMCrashProtectorType)crashType;
+- (void)openCrashProtector:(XMCrashProtectorType)crashType handel:(XMCrashProtectorBlock)handle;
+
+- (void)catchWithException:(NSException *)exception
+                 crashType:(XMCrashProtectorType)crashType;
+
 
 @end
