@@ -20,6 +20,8 @@ typedef NS_ENUM(NSInteger, XMCrashProtectorType) {
 
 @interface XMProtectorCrash : NSObject
 
+@property (nonatomic, strong) NSException *exception;
+
 + (instancetype)shareProtecotor;
 
 - (void)openCrashProtector:(XMCrashProtectorType)crashType;

@@ -22,6 +22,12 @@ static XMCrashProtectorBlock _crashProtector;
 + (void)logCrashWithException:(NSException *)exception
                     crashType:(XMCrashProtectorType)crashType {
     //__weak __typeof(self) weakSelf = self;
+    NSException *oldExc = [XMProtectorCrash shareProtecotor].exception;
+    if ([exception.name isEqualToString:oldExc.name] &&
+        [exception.reason isEqualToString:oldExc.reason]) {
+        return;
+    }
+    [XMProtectorCrash shareProtecotor].exception = exception;
     [XMProtectorCrashLog logCrashWithException:exception block:^(NSString *logError) {
         if (_crashProtector) {
             XMLog(@"%@", logError);
