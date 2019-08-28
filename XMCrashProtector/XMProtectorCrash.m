@@ -49,9 +49,10 @@
     return self;
 }
 
-- (void)openCrashProtector:(XMCrashProtectorType)crashType {
+- (void)openCrashProtector:(XMCrashProtectorType)crashType handel:(XMCrashProtectorBlock)handle {
+    self.handel = handle;
     
-     dispatch_semaphore_wait(_prtectorLock, DISPATCH_TIME_FOREVER);
+    dispatch_semaphore_wait(_prtectorLock, DISPATCH_TIME_FOREVER);
     if (crashType) {
         #pragma clang diagnostic push
         #pragma clang diagnostic ignored "-Wundeclared-selector"

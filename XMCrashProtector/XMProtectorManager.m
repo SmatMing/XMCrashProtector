@@ -13,10 +13,6 @@
     [[XMProtectorCrash shareProtecotor] openCrashProtector:crashType handel:block];
 }
 
-//crash 日志
-+ (void)logCrashWithException:(NSException *)exception
-                    crashType:(XMCrashProtectorType)crashType {
-}
 
 
 @end

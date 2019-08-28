@@ -7,7 +7,6 @@
 //
 
 #import "ViewController.h"
-#import "XMProtectorManager.h"
 #import "TestKVOModel.h"
 
 @interface ViewController ()
@@ -20,11 +19,36 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    [XMProtectorManager openCrashProtectorType:XMCrashProtectorTypeAll withBlock:^(NSException *exception, NSString *crashLog, XMCrashProtectorType crashType) {
-         NSLog(@"");
-    }];
-    //注意：如需测试请把注释代码放出即可
+    
+    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
+    button.frame = CGRectMake(50, 100, 150, 60);
+    button.backgroundColor = [UIColor orangeColor];
+    [button setTitle:@"ClickPush" forState:UIControlStateNormal];
+    [button addTarget:self action:@selector(push) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:button];
+    
+    UIButton *button1 = [UIButton buttonWithType:UIButtonTypeCustom];
+    button1.frame = CGRectMake(50, 300, 150, 60);
+    button1.backgroundColor = [UIColor brownColor];
+    [button1 setTitle:@"ClickBack" forState:UIControlStateNormal];
+    [button1 addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:button1];
+    
+    
     [self startTest];
+}
+
+-(void)push {
+    
+    ViewController *vc = [[ViewController alloc] init];
+    vc.flag = 1;
+    vc.view.backgroundColor = [UIColor cyanColor];
+    [self showViewController:vc sender:nil];
+    
+}
+
+-(void)back {
+     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)startTest {
@@ -45,8 +69,9 @@
 //    [self testKVO];
 //
 //    [self testNotifactionCenter];
-    [self testTimer];
-    
+    if (self.flag == 1) {
+        [self testTimer];
+    }
 }
 
 #pragma mark - -------------------------NSArray-------------------------
@@ -283,8 +308,9 @@
 
 #pragma mark - ---------------Timer------------------
 - (void)testTimer {
-    self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerAction:) userInfo:nil repeats:YES];
+    self.timer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(timerAction) userInfo:nil repeats:YES];
 }
+
 
 
 - (void)didReceiveMemoryWarning {
