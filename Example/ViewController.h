@@ -10,6 +10,7 @@
 
 @interface ViewController : UIViewController
 
+@property (nonatomic, assign) NSUInteger flag;
 
 @end
 

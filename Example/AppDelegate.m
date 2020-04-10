@@ -7,6 +7,7 @@
 //
 
 #import "AppDelegate.h"
+#import "XMProtectorManager.h"
 
 @interface AppDelegate ()
 
@@ -17,6 +18,10 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     // Override point for customization after application launch.
+    [XMProtectorManager openCrashProtectorType:XMCrashProtectorTypeAll withBlock:^(NSException *exception, NSString *crashLog) {
+        NSLog(@"%@",crashLog);
+    }];
+    //注意：如需测试请把注释代码放出即可
     return YES;
 }
 
