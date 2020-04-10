@@ -44,6 +44,9 @@
         //stringByReplacingCharactersInRange:withString:
         [self exchangeInstanceMethodWithClass:dClass originalSel:@selector(stringByReplacingCharactersInRange:withString:) newSel:@selector(safe_stringByReplacingCharactersInRange:withString:)];
         
+        //rangeOfString:
+        [self exchangeInstanceMethodWithClass:dClass originalSel:@selector(rangeOfString:) newSel:@selector(safe_rangeOfString:)];
+        
     });
 }
 
@@ -180,6 +183,18 @@
     }
 }
 
+- (NSRange)safe_rangeOfString:(NSString *)searchString {
+    NSRange rang = NSMakeRange(0, 0);
+    
+    @try {
+        rang = [self safe_rangeOfString:searchString];
+    } @catch (NSException *exception) {
+        XMCrashProtectionLog(exception, XMCrashProtectorTypeContainer);
+       
+    } @finally {
+        return rang;
+    }
+}
 
 
 @end
